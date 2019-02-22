@@ -105,8 +105,8 @@ record SpecialiseEntry where
   decodeFun : String
 
 ||| Generate type definitions according to an *ordered* set of specialisation entries.
-generateDefsSpecialised : Backend lang => Vect (S m') SpecialiseEntry -> (n : Nat) -> TDef n -> List lang
-generateDefsSpecialised {lang} {m' = m'} table n td = generateTyDefs e td'
+generateDefsSpecialised' : Backend lang => Vect (S m') SpecialiseEntry -> (n : Nat) -> TDef n -> (Env (n + S m'), TDef (n + S m'))
+generateDefsSpecialised' {lang} {m' = m'} table n td = (e, td')
    where m : Nat
          m = S m'
          e : Env (n + m)
@@ -124,7 +124,15 @@ generateDefsSpecialised {lang} {m' = m'} table n td = generateTyDefs e td'
                    go (TProd xs) = TProd (assert_total $ map (traverseTD n (i, se)) xs)
                    go (TMu xs)   = TMu (assert_total $ map (\(c, t) => (c,traverseTD (S n) (i, se) t)) xs)
                    --go (TName name t) = TName name (traverseTD n (i, se) t)
-                   go (TApp f xs) = ?goTApp
+                   go (TApp f xs) = let k = arity f
+                                     in TApp (TName (name f) (assert_total $ traverseTD k (i, se) (weakenTDef (def f) (k + m) (lteAddRight k))))
+                                             ((assert_total $ map (traverseTD n (i, se)) $ xs) ++ map (\ix => replace prf $ weakenTDef (TVar ix) _ (lteAddRight m)) range)
+                      where
+                      arity : TNamed k -> Nat
+                      arity {k} _ = k
                    go x = x -- only TVar i case left
          td' : TDef (n + m)
          td' = foldl (flip (traverseTD n)) (weakenTDef td (n + m) (lteAddRight n)) (zip range table)
+
+generateDefsSpecialised : Backend lang => Vect (S m') SpecialiseEntry -> (n : Nat) -> TDef n -> List lang
+generateDefsSpecialised {lang} table n td = uncurry (generateTyDefs {lang}) $ generateDefsSpecialised' {lang} table n td
