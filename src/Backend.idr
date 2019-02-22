@@ -125,8 +125,12 @@ generateDefsSpecialised' {lang} {m' = m'} table n td = (e, td')
                    go (TMu xs)   = TMu (assert_total $ map (\(c, t) => (c,traverseTD (S n) (i, se) t)) xs)
                    --go (TName name t) = TName name (traverseTD n (i, se) t)
                    go (TApp f xs) = let k = arity f
-                                     in TApp (TName (name f) (assert_total $ traverseTD k (i, se) (weakenTDef (def f) (k + m) (lteAddRight k))))
-                                             ((assert_total $ map (traverseTD n (i, se)) $ xs) ++ map (\ix => replace prf $ weakenTDef (TVar ix) _ (lteAddRight m)) range)
+                                        k' = length xs
+                                        p : (k = k')
+                                          = Refl
+                                        f' = (TName (name f) (assert_total $ traverseTD k (i, se) (weakenTDef (def f) (k + m) (lteAddRight k))))
+                                     in TApp f'
+                                             ((map (traverseTD n (i, se)) $ xs) ++ ?mlong ) --map (\ix => (TVar {n=n+m} (shift n ix))) (range {len=m}))
                       where
                       arity : TNamed k -> Nat
                       arity {k} _ = k
