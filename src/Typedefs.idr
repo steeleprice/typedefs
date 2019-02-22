@@ -86,6 +86,11 @@ shiftVars (TVar v)       = TVar $ shift 1 v
 shiftVars (TMu cs)       = assert_total $ TMu $ map (map shiftVars) cs
 shiftVars (TApp f xs)    = assert_total $ TApp f $ map shiftVars xs 
 
+-- TODO better implementation if we're actually gonna use this.
+shift : (n : Nat) -> TDef m -> TDef (n + m)
+shift Z     td = td
+shift {m} (S n) td = rewrite plusSuccRightSucc n m in shift n (shiftVars td)
+
 mutual
   ||| Apply a TDef with free variables to a vector of arguments.
   ap : TDef n -> Vect n (TDef m) -> TDef m
