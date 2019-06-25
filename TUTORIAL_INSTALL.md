@@ -41,7 +41,8 @@ Use `:q` to quit.
 
 ## 1. Get the source
 
-In order to compile _Typedefs_ you will need to download it's source, you can find it on its public repo here: [http://github.com/typedefs/typedefs](http://github.com/typedefs/typedefs)
+In order to compile _Typedefs_ you will need to download it's source, you can find it on its 
+public repo here: [http://github.com/typedefs/typedefs](http://github.com/typedefs/typedefs)
 
 One very easy way to get the code is to clone the project with the following command
 
@@ -51,18 +52,27 @@ git clone git@github.com:typedefs/typedefs.git
 
 ## 2. Get elba
 
-For this tutorial we are going to build the project using the [elba package manager](ELBA).
-The main page ([https://github.com/elba/elba/](ELBA)) contains the instruction to install elba on your system.
+For this tutorial we are going to build the project using the [elba package manager][ELBA].
+The main page ( [https://github.com/elba/elba/][ELBA] ) contains the instruction to install elba 
+on your system.
+
+The easiest way to install is to use the pre-built binary and add it to your path.
+
+The prebuilt binary can be found on the [release page](https://github.com/elba/elba/releases)
+
+
 
 ## 3. Compile and install
 
-Once your copy of the repo is downloaded go into its directory (using `cd typedefs` for example) and you can now compile the project using 
+Once your copy of the repo is downloaded go into its directory (using `cd typedefs` for example) 
+and you can now compile the project using 
 
 ```sh
 elba install
 ```
 
-This will download all the dependencies and compile the project. The last line printed should be something like 
+This will download all the dependencies and compile the project. The last line printed should be 
+something like 
 
 ```sh
 done! 1 binaries installed into ~/.elba/bin [54.81s]
