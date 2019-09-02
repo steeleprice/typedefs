@@ -13,4 +13,4 @@ testSuite =
      HaskellTests.testSuite
      ReasonMLTests.testSuite
      JSONTests.testSuite
-     TermParseWriteTests.testSuite
+     -- TermParseWriteTests.testSuite
